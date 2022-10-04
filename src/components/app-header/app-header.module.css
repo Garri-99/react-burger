@@ -1,10 +1,15 @@
 .header {
   background-color: #1C1C21;
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 1;
 }
 
 .nav {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   position: relative;
 }
 

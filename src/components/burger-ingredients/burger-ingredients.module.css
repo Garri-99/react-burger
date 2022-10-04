@@ -1,0 +1,15 @@
+.section {
+  max-width: 600px;
+}
+
+.cart-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto;
+  column-gap: 24px;
+}
+
+.menu-container {
+  max-height: 100vh;
+  overflow-y: scroll;
+}
