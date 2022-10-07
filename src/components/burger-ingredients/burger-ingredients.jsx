@@ -3,18 +3,21 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import data from "../../utils/data";
 import BIStyle from './burger-ingredients.module.css'
 import Cart from "../cart/cart";
+import PropTypes from 'prop-types'
+import { ingredientPropType } from "../../utils/prop-types";
+
 
 const Tabs = () => {
-  const [current, setCurrent] = React.useState('one')
+  const [current, setCurrent] = React.useState('bun')
   return (
     <div style={{ display: 'flex' }}>
-      <Tab value="one" active={current === 'one'} onClick={setCurrent}>
+      <Tab value="bun" active={current === 'bun'} onClick={setCurrent}>
         Булки
       </Tab>
-      <Tab value="two" active={current === 'two'} onClick={setCurrent}>
+      <Tab value="sauce" active={current === 'sauce'} onClick={setCurrent}>
         Соусы
       </Tab>
-      <Tab value="three" active={current === 'three'} onClick={setCurrent}>
+      <Tab value="main" active={current === 'main'} onClick={setCurrent}>
         Начинки
       </Tab>
     </div>
@@ -24,7 +27,7 @@ const Tabs = () => {
 class BurgerIngredients extends React.Component {
   render() {
    return (
-    <section className={BIStyle.section}>
+    <section style={{maxWidth: '600px', marginRight: '56px'}}>
       <h1 className="text text_color_primary text_type_main-large mt-10 mb-5">Соберите бургер</h1>
       <Tabs />
       <div className={BIStyle['menu-container']}>
@@ -44,6 +47,10 @@ class BurgerIngredients extends React.Component {
     </section>
    )
   }
+}
+
+BurgerIngredients.protoTypes = {
+  data: PropTypes.arrayOf(ingredientPropType)
 }
 
 export default BurgerIngredients

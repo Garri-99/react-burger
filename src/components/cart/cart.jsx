@@ -10,7 +10,7 @@ class Cart extends React.Component {
           <img src={this.props.image} />
           {this.props.count && <Counter count={this.props.count} size="default" />}
         </div>
-        <div style={{display: 'flex'}} className='mt-2 mb-2'>
+        <div style={{display: 'flex', alignItems: 'flex-end'}} className='mt-2 mb-2'>
           <p className="text text_type_digits-default mr-2">{this.props.price}</p>
           <CurrencyIcon type="primary" />
         </div>
