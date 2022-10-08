@@ -211,4 +211,7 @@ const data = [
   }
 ]
 
-export default data
+const buns = data.filter(item => item.type === 'bun')
+const sauces = data.filter(item => item.type === 'sauce')
+const main = data.filter(item => item.type === 'main')
+export { data, buns, sauces, main }

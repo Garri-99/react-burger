@@ -5,7 +5,7 @@
 }
 
 .list {
-  max-height: 68vh;
+  max-height: calc(100vh - 485px);
   margin: 0;
   padding-left: 0;
   display: flex;
@@ -14,6 +14,13 @@
   list-style: none;
   overflow-y: scroll;
   scrollbar-color: #8585AD #2F2F37;;
+}
+
+.container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 8px;
 }
 
 .list::-webkit-scrollbar {

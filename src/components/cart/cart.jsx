@@ -1,23 +1,33 @@
-import React from "react";
-import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
-import CStyle from './cart.module.css'
+import {
+  CurrencyIcon,
+  Counter,
+} from "@ya.praktikum/react-developer-burger-ui-components";
+import PropTypes from "prop-types";
+import CStyle from "./cart.module.css";
 
-class Cart extends React.Component {
-  render() {
-    return (
-      <div className={CStyle.cart}>
-        <div style={{ display: 'flex', alignItems: 'center', position: 'relative', justifyContent: 'center' }} className="pl-4 pr-4">
-          <img src={this.props.image} />
-          {this.props.count && <Counter count={this.props.count} size="default" />}
-        </div>
-        <div style={{display: 'flex', alignItems: 'flex-end'}} className='mt-2 mb-2'>
-          <p className="text text_type_digits-default mr-2">{this.props.price}</p>
-          <CurrencyIcon type="primary" />
-        </div>
-        <p style={{minHeight: '48px', textAlign: 'center'}} className="text text_type_main-default">{this.props.name}</p>
+function Cart(props) {
+  return (
+    <div className={CStyle.cart}>
+      <div className={CStyle["img-container"] + " pl-4 pr-4"}>
+        <img src={props.image} alt={props.name} />
+        {!!props.count && <Counter count={props.count} size="default" />}
       </div>
-    )
-  }
+      <div className={CStyle.flex + " mt-2 mb-2"}>
+        <p className="text text_type_digits-default mr-2">{props.price}</p>
+        <CurrencyIcon type="primary" />
+      </div>
+      <p className={CStyle.name + " text text_type_main-default"}>
+        {props.name}
+      </p>
+    </div>
+  );
 }
 
-export default Cart
+Cart.protoTypes = {
+  count: PropTypes.number,
+  image: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+};
+
+export default Cart;
