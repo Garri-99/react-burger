@@ -1,0 +1,22 @@
+.cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 272px;
+}
+
+.img-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  justify-content: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.name {
+  min-height: 48px;
+  text-align: center;
+}
