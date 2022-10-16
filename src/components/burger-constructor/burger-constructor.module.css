@@ -5,7 +5,7 @@
 }
 
 .list {
-  max-height: calc(100vh - 485px);
+  max-height: calc(100vh - 488px);
   margin: 0;
   padding-left: 0;
   display: flex;
