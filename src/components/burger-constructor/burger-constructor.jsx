@@ -64,11 +64,7 @@ function BurgerConstructor(props) {
       </div>
       {isOpen && (
         <Modal
-          onEscKeydown={(e) => {
-            e.preventDefault();
-            e.key === "Escape" && closeAllModals();
-          }}
-          onOverlayClick={closeAllModals}
+          onClose={closeAllModals}
         >
           <OrderDetails />
         </Modal>

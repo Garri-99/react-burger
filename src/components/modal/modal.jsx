@@ -7,8 +7,12 @@ import MStyle from "./modal.module.css";
 
 const modalsContainer = document.querySelector("#modals");
 
-function Modal({ title, onOverlayClick, onEscKeydown, children }) {
+function Modal({ title, onClose, children }) {
   React.useEffect(() => {
+    const onEscKeydown=(e) => {
+      e.preventDefault();
+      e.key === "Escape" && onClose();
+    }
     document.addEventListener("keydown", onEscKeydown);
 
     return () => {
@@ -23,11 +27,11 @@ function Modal({ title, onOverlayClick, onEscKeydown, children }) {
           {title && <h3 className="text text_type_main-large">{title}</h3>}
         </div>
         {children}
-        <button className={MStyle.close} onClick={onOverlayClick}>
+        <button className={MStyle.close} onClick={onClose}>
           <CloseIcon type="primary" />
         </button>
       </div>
-      <ModalOverlay onClick={onOverlayClick} />
+      <ModalOverlay onClick={onClose} />
     </>,
     modalsContainer
   );
@@ -36,7 +40,6 @@ function Modal({ title, onOverlayClick, onEscKeydown, children }) {
 Modal.protoTypes = {
   title: PropTypes.string,
   onOverlayClick: PropTypes.func.isRequired,
-  onEscKeydown: PropTypes.func.isRequired,
   children: PropTypes.element.isRequired
 };
 

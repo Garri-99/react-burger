@@ -9,11 +9,11 @@ import IngredientDetails from "../ingredient-details/ingredient-details";
 
 function BurgerIngredients(props) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [details, setDetails] = React.useState(null)
+  const [details, setDetails] = React.useState(null);
   const [current, setCurrent] = React.useState("bun");
 
   const onIngredientClick = (data) => {
-    setDetails(data)
+    setDetails(data);
     setIsOpen(true);
   };
 
@@ -43,7 +43,7 @@ function BurgerIngredients(props) {
         </h2>
         <ul className={BIStyle.list}>
           {props.buns.map((item) => (
-            <li key={item._id} onClick={()=>onIngredientClick(item)}>
+            <li key={item._id} onClick={() => onIngredientClick(item)}>
               <Cart data={item} />
             </li>
           ))}
@@ -53,7 +53,7 @@ function BurgerIngredients(props) {
         </h2>
         <ul className={BIStyle.list}>
           {props.sauces.map((item) => (
-            <li key={item._id} onClick={()=>onIngredientClick(item)}>
+            <li key={item._id} onClick={() => onIngredientClick(item)}>
               <Cart data={item} />
             </li>
           ))}
@@ -63,21 +63,14 @@ function BurgerIngredients(props) {
         </h2>
         <ul className={BIStyle.list}>
           {props.main.map((item) => (
-            <li key={item._id} onClick={()=>onIngredientClick(item)}>
+            <li key={item._id} onClick={() => onIngredientClick(item)}>
               <Cart data={item} />
             </li>
           ))}
         </ul>
       </div>
       {isOpen && (
-        <Modal
-          onEscKeydown={(e) => {
-            e.preventDefault();
-            e.key === "Escape" && closeAllModals();
-          }}
-          onOverlayClick={closeAllModals}
-          title={'Детали ингредиента'}
-        >
+        <Modal onClose={closeAllModals} title={"Детали ингредиента"}>
           <IngredientDetails data={details} />
         </Modal>
       )}
