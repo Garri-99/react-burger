@@ -25,7 +25,7 @@ function Cart(props) {
   );
 }
 
-Cart.protoTypes = {
+Cart.propTypes = {
   data: ingredientPropType.isRequired
 };
 

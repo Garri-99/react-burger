@@ -78,7 +78,7 @@ function BurgerIngredients(props) {
   );
 }
 
-BurgerIngredients.protoTypes = {
+BurgerIngredients.propTypes = {
   main: PropTypes.arrayOf(ingredientPropType).isRequired,
   sauces: PropTypes.arrayOf(ingredientPropType).isRequired,
   buns: PropTypes.arrayOf(ingredientPropType).isRequired,

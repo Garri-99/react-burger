@@ -5,7 +5,7 @@ function ModalOverlay({ onClick }) {
   return <div className={MOStyle.overlay} onClick={onClick} />;
 }
 
-ModalOverlay.protoTypes = {
+ModalOverlay.propTypes = {
   onclick: PropTypes.func.isRequired
 };
 

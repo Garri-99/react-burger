@@ -73,7 +73,7 @@ function BurgerConstructor(props) {
   );
 }
 
-BurgerConstructor.protoTypes = {
+BurgerConstructor.propTypes = {
   data: PropTypes.arrayOf(ingredientPropType).isRequired,
 };
 
