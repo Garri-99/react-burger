@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   max-width: 272px;
+  cursor: pointer;
 }
 
 .img-container {

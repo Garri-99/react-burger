@@ -3,13 +3,26 @@ import {
   DragIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import React from "react";
 import { data } from "../../utils/data";
 import currency from "../../images/icon.svg";
 import BCStyle from "./burger-constructor.module.css";
 import PropTypes from "prop-types";
 import { ingredientPropType } from "../../utils/prop-types";
+import Modal from "../modal/modal";
+import OrderDetails from "../order-details/order-details";
 
 function BurgerConstructor(props) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const onButtonClick = () => {
+    setIsOpen(true);
+  };
+
+  const closeAllModals = () => {
+    setIsOpen(false);
+  };
+
   return (
     <section className={BCStyle.section + " mt-25"}>
       <div className="mb-4 ml-8">
@@ -45,15 +58,22 @@ function BurgerConstructor(props) {
       <div className={BCStyle.container + " mt-10"}>
         <p className="text text_type_digits-medium mr-2">610</p>
         <img alt="валюта" src={currency} className="mr-10" />
-        <Button type="primary" size="large" htmlType="button">
+        <Button type="primary" size="large" htmlType="button" onClick={onButtonClick}>
           Оформить заказ
         </Button>
       </div>
+      {isOpen && (
+        <Modal
+          onClose={closeAllModals}
+        >
+          <OrderDetails />
+        </Modal>
+      )}
     </section>
   );
 }
 
-BurgerConstructor.protoTypes = {
+BurgerConstructor.propTypes = {
   data: PropTypes.arrayOf(ingredientPropType).isRequired,
 };
 
