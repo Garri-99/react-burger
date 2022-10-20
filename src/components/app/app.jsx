@@ -6,7 +6,7 @@ import AStyle from "./app.module.css";
 
 function App() {
   const baseUrl = "https://norma.nomoreparties.space";
-  const [data, setData] = React.useState([]);
+  const [data, setData] = React.useState(null);
 
   React.useEffect(() => {
     fetch(`${baseUrl}/api/ingredients`)
@@ -25,7 +25,8 @@ function App() {
   return (
     <>
       <AppHeader />
-      <main className={AStyle.content}>
+      {data && (
+        <main className={AStyle.content}>
         <BurgerIngredients
           main={data.filter((item) => item.type === "main")}
           sauces={data.filter((item) => item.type === "sauce")}
@@ -35,8 +36,10 @@ function App() {
           data={data.filter(
             (item) => item.type === "main" || item.type === "sauce"
           )}
+          buns={data.filter((item) => item.type === "bun")}
         />
       </main>
+      )}
     </>
   );
 }

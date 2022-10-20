@@ -4,7 +4,6 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import React from "react";
-import { data } from "../../utils/data";
 import currency from "../../images/icon.svg";
 import BCStyle from "./burger-constructor.module.css";
 import PropTypes from "prop-types";
@@ -29,9 +28,9 @@ function BurgerConstructor(props) {
         <ConstructorElement
           type="top"
           isLocked={true}
-          text={data[0].name + " (верх)"}
+          text={props.buns[0].name + " (верх)"}
           price={20}
-          thumbnail={data[0].image}
+          thumbnail={props.buns[0].image}
         />
       </div>
       <ul className={BCStyle.list}>
@@ -50,9 +49,9 @@ function BurgerConstructor(props) {
         <ConstructorElement
           type="bottom"
           isLocked={true}
-          text={data[0].name + " (низ)"}
+          text={props.buns[0].name + " (низ)"}
           price={20}
-          thumbnail={data[0].image}
+          thumbnail={props.buns[0].image}
         />
       </div>
       <div className={BCStyle.container + " mt-10"}>
@@ -75,6 +74,7 @@ function BurgerConstructor(props) {
 
 BurgerConstructor.propTypes = {
   data: PropTypes.arrayOf(ingredientPropType).isRequired,
+  buns: ingredientPropType.isRequired
 };
 
 export default BurgerConstructor;
