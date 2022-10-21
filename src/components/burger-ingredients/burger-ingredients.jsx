@@ -1,16 +1,16 @@
-import React from "react";
+import { useContext, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import BIStyle from "./burger-ingredients.module.css";
 import Cart from "../cart/cart";
-import PropTypes from "prop-types";
-import { ingredientPropType } from "../../utils/prop-types";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
+import { IngredientsContext } from "../../context/ingredients-context";
 
-function BurgerIngredients(props) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [details, setDetails] = React.useState(null);
-  const [current, setCurrent] = React.useState("bun");
+function BurgerIngredients() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [details, setDetails] = useState(null);
+  const [current, setCurrent] = useState("bun");
+  const ingredients = useContext(IngredientsContext);
 
   const onIngredientClick = (data) => {
     setDetails(data);
@@ -42,7 +42,7 @@ function BurgerIngredients(props) {
           Булки
         </h2>
         <ul className={BIStyle.list}>
-          {props.buns.map((item) => (
+          {ingredients.buns.map((item) => (
             <li key={item._id} onClick={() => onIngredientClick(item)}>
               <Cart data={item} />
             </li>
@@ -52,7 +52,7 @@ function BurgerIngredients(props) {
           Соусы
         </h2>
         <ul className={BIStyle.list}>
-          {props.sauces.map((item) => (
+          {ingredients.sauces.map((item) => (
             <li key={item._id} onClick={() => onIngredientClick(item)}>
               <Cart data={item} />
             </li>
@@ -62,7 +62,7 @@ function BurgerIngredients(props) {
           Начинки
         </h2>
         <ul className={BIStyle.list}>
-          {props.main.map((item) => (
+          {ingredients.main.map((item) => (
             <li key={item._id} onClick={() => onIngredientClick(item)}>
               <Cart data={item} />
             </li>
@@ -77,11 +77,5 @@ function BurgerIngredients(props) {
     </section>
   );
 }
-
-BurgerIngredients.propTypes = {
-  main: PropTypes.arrayOf(ingredientPropType).isRequired,
-  sauces: PropTypes.arrayOf(ingredientPropType).isRequired,
-  buns: PropTypes.arrayOf(ingredientPropType).isRequired,
-};
 
 export default BurgerIngredients;
