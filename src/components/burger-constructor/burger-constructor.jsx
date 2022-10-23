@@ -9,6 +9,8 @@ import BCStyle from "./burger-constructor.module.css";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import { IngredientsContext } from "../../context/ingredients-context";
+import { baseUrl } from "../../utils/constants";
+import { request } from "../../utils/request";
 
 const intialState = {
   bun: null,
@@ -41,7 +43,7 @@ function reducer(state, action) {
 }
 
 function BurgerConstructor() {
-  const baseUrl = "https://norma.nomoreparties.space";
+  const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false);
   const [orderNumber, setOrderNumber] = useState(null);
   const ingredients = useContext(IngredientsContext);
@@ -59,7 +61,8 @@ function BurgerConstructor() {
   });
 
   const onButtonClick = () => {
-    fetch(`${baseUrl}/api/orders`, {
+    setIsLoading(true)
+    request(`${baseUrl}/api/orders`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -72,16 +75,11 @@ function BurgerConstructor() {
       }),
     })
       .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(`Ошибка ${res.status}`);
-      })
-      .then((res) => {
         setOrderNumber(res.order.number);
+        setIsOpen(true);
       })
-      .catch((err) => console.log(err));
-    setIsOpen(true);
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false))
   };
 
   const closeAllModals = () => {
@@ -130,10 +128,10 @@ function BurgerConstructor() {
           htmlType="button"
           onClick={onButtonClick}
         >
-          Оформить заказ
+          {isLoading? 'Оформляем...': 'Оформить заказ'}
         </Button>
       </div>
-      {isOpen && orderNumber && (
+      {isOpen && (
         <Modal onClose={closeAllModals}>
           <OrderDetails number={orderNumber} />
         </Modal>

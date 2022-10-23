@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import BIStyle from "./burger-ingredients.module.css";
 import Cart from "../cart/cart";
@@ -11,6 +11,10 @@ function BurgerIngredients() {
   const [details, setDetails] = useState(null);
   const [current, setCurrent] = useState("bun");
   const ingredients = useContext(IngredientsContext);
+  const sauces = useRef(null);
+  const buns = useRef(null);
+  const main = useRef(null);
+  const container = useRef(null)
 
   const onIngredientClick = (data) => {
     setDetails(data);
@@ -21,24 +25,36 @@ function BurgerIngredients() {
     setIsOpen(false);
   };
 
+  const onTabClick = (e) => {
+    if (e === 'bun') {
+      buns.current.scrollIntoView({behavior: 'smooth'});
+      setCurrent(e)
+    } else if (e === 'sauce') {
+      sauces.current.scrollIntoView({behavior: 'smooth'});
+      setCurrent(e)
+    } else if (e === 'main') {
+      main.current.scrollIntoView({behavior: 'smooth'});
+      setCurrent(e)
+    }
+  }
   return (
     <section className={BIStyle.section}>
       <h1 className="text text_color_primary text_type_main-large mt-10 mb-5">
         Соберите бургер
       </h1>
       <div className={BIStyle.flex}>
-        <Tab value="bun" active={current === "bun"} onClick={setCurrent}>
+        <Tab value="bun" active={current === "bun"} onClick={onTabClick}>
           Булки
         </Tab>
-        <Tab value="sauce" active={current === "sauce"} onClick={setCurrent}>
+        <Tab value="sauce" active={current === "sauce"} onClick={onTabClick}>
           Соусы
         </Tab>
-        <Tab value="main" active={current === "main"} onClick={setCurrent}>
+        <Tab value="main" active={current === "main"} onClick={onTabClick}>
           Начинки
         </Tab>
       </div>
-      <div className={BIStyle.container}>
-        <h2 className="text text_color_primary text_type_main-medium mt-10 mb-6">
+      <div className={BIStyle.container} ref={container}>
+        <h2 className="text text_color_primary text_type_main-medium mt-10 mb-6" ref={buns}>
           Булки
         </h2>
         <ul className={BIStyle.list}>
@@ -48,7 +64,7 @@ function BurgerIngredients() {
             </li>
           ))}
         </ul>
-        <h2 className="text text_color_primary text_type_main-medium mt-10 mb-6">
+        <h2 className="text text_color_primary text_type_main-medium mt-10 mb-6" ref={sauces}>
           Соусы
         </h2>
         <ul className={BIStyle.list}>
@@ -58,7 +74,7 @@ function BurgerIngredients() {
             </li>
           ))}
         </ul>
-        <h2 className="text text_color_primary text_type_main-medium mt-10 mb-6">
+        <h2 className="text text_color_primary text_type_main-medium mt-10 mb-6" ref={main}>
           Начинки
         </h2>
         <ul className={BIStyle.list}>
