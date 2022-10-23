@@ -3,23 +3,88 @@ import {
   DragIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import React from "react";
+import { useState, useContext, useReducer } from "react";
 import currency from "../../images/icon.svg";
 import BCStyle from "./burger-constructor.module.css";
-import PropTypes from "prop-types";
-import { ingredientPropType } from "../../utils/prop-types";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
+import { IngredientsContext } from "../../context/ingredients-context";
+import { baseUrl } from "../../utils/constants";
+import { request } from "../../utils/request";
 
-function BurgerConstructor(props) {
-  const [isOpen, setIsOpen] = React.useState(false);
+const intialState = {
+  bun: null,
+  ingredients: null,
+  cost() {
+    return this.bun
+      ? 2 * this.bun.price +
+          (this.ingredients
+            ? this.ingredients.reduce((acc, item) => acc + item.price, 0)
+            : 0)
+      : 0;
+  },
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "add":
+      return {
+        /*добавить ингр*/
+      };
+    case "delete":
+      return {
+        /*удалить ингр*/
+      };
+    case "reset":
+      return intialState;
+    default:
+      throw new Error(`Wrong type of action: ${action.type}`);
+  }
+}
+
+function BurgerConstructor() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [orderNumber, setOrderNumber] = useState(null);
+  const ingredients = useContext(IngredientsContext);
+  const [state, dispatch] = useReducer(reducer, {
+    bun: ingredients.buns[0],
+    ingredients: [...ingredients.sauces, ...ingredients.main],
+    cost() {
+      return this.bun
+        ? 2 * this.bun.price +
+            (this.ingredients
+              ? this.ingredients.reduce((acc, item) => acc + item.price, 0)
+              : 0)
+        : 0;
+    },
+  });
 
   const onButtonClick = () => {
-    setIsOpen(true);
+    setIsLoading(true)
+    request(`${baseUrl}/api/orders`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        ingredients: [
+          state.bun._id,
+          ...state.ingredients.map((item) => item._id),
+        ],
+      }),
+    })
+      .then((res) => {
+        setOrderNumber(res.order.number);
+        setIsOpen(true);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false))
   };
 
   const closeAllModals = () => {
     setIsOpen(false);
+    setOrderNumber(null);
   };
 
   return (
@@ -28,13 +93,13 @@ function BurgerConstructor(props) {
         <ConstructorElement
           type="top"
           isLocked={true}
-          text={props.buns[0].name + " (верх)"}
-          price={20}
-          thumbnail={props.buns[0].image}
+          text={state.bun.name + " (верх)"}
+          price={state.bun.price}
+          thumbnail={state.bun.image}
         />
       </div>
       <ul className={BCStyle.list}>
-        {props.data.map((data, index) => (
+        {state.ingredients.map((data, index) => (
           <li className={BCStyle.item} key={index}>
             <DragIcon />
             <ConstructorElement
@@ -49,32 +114,30 @@ function BurgerConstructor(props) {
         <ConstructorElement
           type="bottom"
           isLocked={true}
-          text={props.buns[0].name + " (низ)"}
-          price={20}
-          thumbnail={props.buns[0].image}
+          text={state.bun.name + " (низ)"}
+          price={state.bun.price}
+          thumbnail={state.bun.image}
         />
       </div>
       <div className={BCStyle.container + " mt-10"}>
-        <p className="text text_type_digits-medium mr-2">610</p>
+        <p className="text text_type_digits-medium mr-2">{state.cost()}</p>
         <img alt="валюта" src={currency} className="mr-10" />
-        <Button type="primary" size="large" htmlType="button" onClick={onButtonClick}>
-          Оформить заказ
+        <Button
+          type="primary"
+          size="large"
+          htmlType="button"
+          onClick={onButtonClick}
+        >
+          {isLoading? 'Оформляем...': 'Оформить заказ'}
         </Button>
       </div>
       {isOpen && (
-        <Modal
-          onClose={closeAllModals}
-        >
-          <OrderDetails />
+        <Modal onClose={closeAllModals}>
+          <OrderDetails number={orderNumber} />
         </Modal>
       )}
     </section>
   );
 }
-
-BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(ingredientPropType).isRequired,
-  buns: ingredientPropType.isRequired
-};
 
 export default BurgerConstructor;
