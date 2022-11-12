@@ -1,11 +1,12 @@
 .section {
   max-width: 600px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
 
 .list {
-  max-height: calc(100vh - 488px);
+  max-height: calc(100vh - 490px);
   margin: 0;
   padding-left: 0;
   display: flex;
@@ -23,6 +24,10 @@
   padding-right: 8px;
 }
 
+.instruction {
+  text-align: center;
+}
+
 .list::-webkit-scrollbar {
   width: 8px;
 }
@@ -33,10 +38,4 @@
 
 .list::-webkit-scrollbar-thumb {
   background-color: #8585AD;
-}
-
-.item {
-  display: flex;
-  align-items: center;
-  column-gap: 8px;
 }

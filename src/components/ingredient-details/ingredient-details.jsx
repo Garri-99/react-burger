@@ -1,7 +1,8 @@
 import IDStyle from './ingredient-details.module.css'
-import { ingredientPropType } from '../../utils/prop-types';
+import { useSelector } from 'react-redux';
 
-function IngredientDetails({ data }){
+function IngredientDetails(){
+  const data = useSelector(state => state.currentIngredient.currentIngredient)
   return (
     <div className='mr-25 ml-25'>
       <figure className={IDStyle.figure}>
@@ -29,9 +30,5 @@ function IngredientDetails({ data }){
     </div>
   )
 }
-
-IngredientDetails.propTypes = {
-  data: ingredientPropType.isRequired
-};
 
 export default IngredientDetails
