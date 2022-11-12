@@ -1,43 +1,30 @@
-import { useState, useEffect, useMemo } from "react";
-import { IngredientsContext } from "../../context/ingredients-context";
-import { request } from "../../utils/request";
-import { baseUrl } from "../../utils/constants";
+import { useEffect } from "react";
 import AppHeader from "../app-header/app-header";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import AStyle from "./app.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { getIngredients } from "../../services/slices/ingredients-slice";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 function App() {
-  const [data, setData] = useState(null);
+  const dispatch = useDispatch();
+  const { ingredients } = useSelector((state) => state.ingredients);
 
   useEffect(() => {
-    request(`${baseUrl}/api/ingredients`)
-      .then((res) => {
-        setData(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  const ingredients = useMemo(() => {
-    return (
-      data && {
-        all: data,
-        buns: data.filter((item) => item.type === "bun"),
-        sauces: data.filter((item) => item.type === "sauce"),
-        main: data.filter((item) => item.type === "main"),
-      }
-    );
-  }, [data]);
+    dispatch(getIngredients());
+  }, [dispatch]);
 
   return (
     ingredients && (
       <>
         <AppHeader />
         <main className={AStyle.content}>
-          <IngredientsContext.Provider value={ingredients}>
+          <DndProvider backend={HTML5Backend}>
             <BurgerIngredients />
             <BurgerConstructor />
-          </IngredientsContext.Provider>
+          </DndProvider>
         </main>
       </>
     )

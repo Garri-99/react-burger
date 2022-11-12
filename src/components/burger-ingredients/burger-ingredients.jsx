@@ -1,42 +1,62 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import BIStyle from "./burger-ingredients.module.css";
 import Cart from "../cart/cart";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import { IngredientsContext } from "../../context/ingredients-context";
+import { useDispatch, useSelector } from "react-redux";
+import { setIngredient, clearCurrentIngredient } from "../../services/slices/current-ingredient-slice";
+import { useInView } from "react-intersection-observer";
 
 function BurgerIngredients() {
   const [isOpen, setIsOpen] = useState(false);
-  const [details, setDetails] = useState(null);
-  const [current, setCurrent] = useState("bun");
-  const ingredients = useContext(IngredientsContext);
+  const [current, setCurrentTab] = useState("bun");
+  const dispatch = useDispatch();
+  const {ingredients} = useSelector(state => state.ingredients);
   const sauces = useRef(null);
   const buns = useRef(null);
-  const main = useRef(null);
-  const container = useRef(null)
+  const mains = useRef(null);
+  const container = useRef(null);
+  const [bunsRef, inViewBuns] = useInView({
+    threshold: 0.3,
+  });
+  const [mainsRef, inViewFilling] = useInView({
+    threshold: 0.3,
+  });
+  const [saucesRef, inViewSauces] = useInView({
+    threshold: 0.3,
+  });
 
   const onIngredientClick = (data) => {
-    setDetails(data);
+    dispatch(setIngredient(data))
     setIsOpen(true);
   };
 
-  const closeAllModals = () => {
+  const closeModal = () => {
     setIsOpen(false);
+    dispatch(clearCurrentIngredient())
   };
 
   const onTabClick = (e) => {
-    if (e === 'bun') {
-      buns.current.scrollIntoView({behavior: 'smooth'});
-      setCurrent(e)
-    } else if (e === 'sauce') {
-      sauces.current.scrollIntoView({behavior: 'smooth'});
-      setCurrent(e)
-    } else if (e === 'main') {
-      main.current.scrollIntoView({behavior: 'smooth'});
-      setCurrent(e)
+    if (e === "bun") {
+      buns.current.scrollIntoView({ behavior: "smooth" });
+    } else if (e === "sauce") {
+      sauces.current.scrollIntoView({ behavior: "smooth" });
+    } else if (e === "main") {
+      mains.current.scrollIntoView({ behavior: "smooth" });
     }
-  }
+  };
+
+  useEffect(() => {
+    if (inViewBuns) {
+      setCurrentTab("bun");
+    } else if (inViewSauces) {
+      setCurrentTab("sauce");
+    } else if (inViewFilling) {
+      setCurrentTab("main");
+    }
+  }, [inViewBuns, inViewFilling, inViewSauces]);
+
   return (
     <section className={BIStyle.section}>
       <h1 className="text text_color_primary text_type_main-large mt-10 mb-5">
@@ -54,31 +74,40 @@ function BurgerIngredients() {
         </Tab>
       </div>
       <div className={BIStyle.container} ref={container}>
-        <h2 className="text text_color_primary text_type_main-medium mt-10 mb-6" ref={buns}>
+        <h2
+          className="text text_color_primary text_type_main-medium mt-10 mb-6"
+          ref={buns}
+        >
           Булки
         </h2>
-        <ul className={BIStyle.list}>
-          {ingredients.buns.map((item) => (
+        <ul className={BIStyle.list} ref={bunsRef}>
+          {ingredients.filter((item) => item.type === "bun").map((item) => (
             <li key={item._id} onClick={() => onIngredientClick(item)}>
               <Cart data={item} />
             </li>
           ))}
         </ul>
-        <h2 className="text text_color_primary text_type_main-medium mt-10 mb-6" ref={sauces}>
+        <h2
+          className="text text_color_primary text_type_main-medium mt-10 mb-6"
+          ref={sauces}
+        >
           Соусы
         </h2>
-        <ul className={BIStyle.list}>
-          {ingredients.sauces.map((item) => (
+        <ul className={BIStyle.list} ref={saucesRef}>
+          {ingredients.filter((item) => item.type === "sauce").map((item) => (
             <li key={item._id} onClick={() => onIngredientClick(item)}>
               <Cart data={item} />
             </li>
           ))}
         </ul>
-        <h2 className="text text_color_primary text_type_main-medium mt-10 mb-6" ref={main}>
+        <h2
+          className="text text_color_primary text_type_main-medium mt-10 mb-6"
+          ref={mains}
+        >
           Начинки
         </h2>
-        <ul className={BIStyle.list}>
-          {ingredients.main.map((item) => (
+        <ul className={BIStyle.list} ref={mainsRef}>
+          {ingredients.filter((item) => item.type === "main").map((item) => (
             <li key={item._id} onClick={() => onIngredientClick(item)}>
               <Cart data={item} />
             </li>
@@ -86,8 +115,8 @@ function BurgerIngredients() {
         </ul>
       </div>
       {isOpen && (
-        <Modal onClose={closeAllModals} title={"Детали ингредиента"}>
-          <IngredientDetails data={details} />
+        <Modal onClose={closeModal} title={"Детали ингредиента"}>
+          <IngredientDetails />
         </Modal>
       )}
     </section>
