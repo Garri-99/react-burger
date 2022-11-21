@@ -5,13 +5,13 @@ import {
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { ingredientPropType } from "../../utils/prop-types";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import CLStyle from "./constructor-list.module.css";
 
 function ConstructorList({ data, handleClose, index, moveCard }) {
   const ref = useRef(null);
   const [, drop] = useDrop({
-    accept: 'constructor-list',
+    accept: "constructor-list",
     hover(item, monitor) {
       if (!ref.current) {
         return;
@@ -36,18 +36,18 @@ function ConstructorList({ data, handleClose, index, moveCard }) {
       item.index = hoverIndex;
     },
   });
-  const [{isDragging}, drag] = useDrag({
-    type: 'constructor-list',
-    item:  { data, index },
+  const [{ isDragging }, drag] = useDrag({
+    type: "constructor-list",
+    item: { data, index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
-  const opacity = isDragging ? 0 : 1
+  const opacity = isDragging ? 0 : 1;
   drag(drop(ref));
 
   return (
-    <li className={CLStyle.item}  style={{opacity}} ref={ref}>
+    <li className={CLStyle.item} style={{ opacity }} ref={ref}>
       <DragIcon />
       <ConstructorElement
         text={data.name}
@@ -63,7 +63,7 @@ ConstructorList.propTypes = {
   data: ingredientPropType.isRequired,
   index: PropTypes.number.isRequired,
   handleClose: PropTypes.func.isRequired,
-  moveCard: PropTypes.func.isRequired
+  moveCard: PropTypes.func.isRequired,
 };
 
 export default ConstructorList;
