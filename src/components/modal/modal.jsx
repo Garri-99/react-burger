@@ -1,5 +1,5 @@
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import React from "react";
+import { useEffect } from "react";
 import ReactDOM from "react-dom";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ import MStyle from "./modal.module.css";
 const modalsContainer = document.querySelector("#modals");
 
 function Modal({ title, onClose, children }) {
-  React.useEffect(() => {
+  useEffect(() => {
     const onEscKeydown=(e) => {
       e.preventDefault();
       e.key === "Escape" && onClose();

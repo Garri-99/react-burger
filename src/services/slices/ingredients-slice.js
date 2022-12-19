@@ -39,10 +39,13 @@ const ingredientsSlice = createSlice({
             )
           ].__v -= 2);
     },
+    resetCount(state) {
+      state.ingredients.map(i => i.__v = 0)
+    }
   },
 });
 
-export const { setIngredients, increaseVolume, decreaseVolume } =
+export const { setIngredients, increaseVolume, decreaseVolume, resetCount } =
   ingredientsSlice.actions;
 
 export const getIngredients = () => {

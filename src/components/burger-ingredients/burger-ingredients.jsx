@@ -1,17 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import BIStyle from "./burger-ingredients.module.css";
 import Cart from "../cart/cart";
-import Modal from "../modal/modal";
-import IngredientDetails from "../ingredient-details/ingredient-details";
-import { useDispatch, useSelector } from "react-redux";
-import { setIngredient, clearCurrentIngredient } from "../../services/slices/current-ingredient-slice";
+import { useSelector } from "react-redux";
 import { useInView } from "react-intersection-observer";
 
 function BurgerIngredients() {
-  const [isOpen, setIsOpen] = useState(false);
+  const history = useHistory();
   const [current, setCurrentTab] = useState("bun");
-  const dispatch = useDispatch();
   const {ingredients} = useSelector(state => state.ingredients);
   const sauces = useRef(null);
   const buns = useRef(null);
@@ -28,13 +25,7 @@ function BurgerIngredients() {
   });
 
   const onIngredientClick = (data) => {
-    dispatch(setIngredient(data))
-    setIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-    dispatch(clearCurrentIngredient())
+    history.push(`/ingredient/${data._id}`, { background: history.location })
   };
 
   const onTabClick = (e) => {
@@ -114,11 +105,6 @@ function BurgerIngredients() {
           ))}
         </ul>
       </div>
-      {isOpen && (
-        <Modal onClose={closeModal} title={"Детали ингредиента"}>
-          <IngredientDetails />
-        </Modal>
-      )}
     </section>
   );
 }
