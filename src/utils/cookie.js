@@ -1,5 +1,4 @@
 import { baseUrl } from "./constants";
-import { request } from "./request";
 
 export function setCookie(name, value, props) {
   props = {
@@ -29,17 +28,19 @@ export function setCookie(name, value, props) {
 
 export function getCookie(name) {
   const matches = document.cookie.match(
+    /* eslint-disable */
     new RegExp(
       "(?:^|; )" +
         name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
         "=([^;]*)"
     )
+    /* eslint-enable */
   );
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
 export const refreshToken = () => {
-  return request(`${baseUrl}/api/auth/token`, {
+  return fetch(`${baseUrl}/api/auth/token`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -47,10 +48,17 @@ export const refreshToken = () => {
     body: JSON.stringify({
       token: getCookie("refresh"),
     }),
-  }).then((res) => {
-    setCookie("token", res.accessToken.split("Bearer ")[1]);
-    setCookie("refresh", res.refreshToken);
-  });
+  })
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка ${res.status}`);
+    })
+    .then((res) => {
+      setCookie("token", res.accessToken.split("Bearer ")[1]);
+      setCookie("refresh", res.refreshToken);
+    });
 };
 
 export function deleteCookie(name) {

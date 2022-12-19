@@ -4,25 +4,25 @@ import { request } from "../../utils/request";
 
 const initialState = {
   number: null,
-  isLoading: false
-}
+  isLoading: false,
+};
 
 const orderSlice = createSlice({
-  name: 'order',
+  name: "order",
   initialState,
   reducers: {
     setOrderNubmer(state, actions) {
-      state.number = actions.payload
+      state.number = actions.payload;
     },
     setIsLoading(state, action) {
-      state.isLoading = action.payload
-    }
-  }
+      state.isLoading = action.payload;
+    },
+  },
 });
 
-const { setOrderNubmer, setIsLoading } = orderSlice.actions
+const { setOrderNubmer, setIsLoading } = orderSlice.actions;
 
-export const getOrderNubmer = ({bun, constructorIngredients}, setIsOpen) => {
+export const getOrderNubmer = ({ bun, constructorIngredients }, setIsOpen) => {
   return (dispatch) => {
     dispatch(setIsLoading(true));
     request(`${baseUrl}/api/orders`, {
@@ -34,6 +34,7 @@ export const getOrderNubmer = ({bun, constructorIngredients}, setIsOpen) => {
         ingredients: [
           bun._id,
           ...constructorIngredients.map((item) => item._id),
+          bun._id,
         ],
       }),
     })
@@ -43,7 +44,7 @@ export const getOrderNubmer = ({bun, constructorIngredients}, setIsOpen) => {
       })
       .catch((err) => console.log(err))
       .finally(() => dispatch(setIsLoading(false)));
-  }
-}
+  };
+};
 
 export default orderSlice.reducer;

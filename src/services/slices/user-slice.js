@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { baseUrl } from "../../utils/constants";
-import { deleteCookie, getCookie, refreshToken, setCookie } from "../../utils/cookie";
+import { deleteCookie, getCookie, setCookie } from "../../utils/cookie";
 import { request } from "../../utils/request";
 
 const initialState = {
@@ -112,22 +112,6 @@ export const getUser = () => {
           dispatch(setUser(res));
         }
       })
-      .catch((err) => {
-        if (err === "Ошибка 403") {
-          return refreshToken().then(() => {
-            request(`${baseUrl}/api/auth/user`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + getCookie("token"),
-              },
-            }).then((res) => {
-              if (res.success) {
-                dispatch(setUser(res));
-              }
-            });
-          });
-        }
-      })
       .catch((err) => console.log(err))
       .finally(() => dispatch(setLoading(false)))
   };
@@ -146,24 +130,6 @@ export const changeData = (form) => {
       .then((res) => {
         if (res.success) {
           dispatch(setUser(res));
-        }
-      })
-      .catch((err) => {
-        if (err === "Ошибка 403") {
-          return refreshToken().then(() => {
-            request(`${baseUrl}/api/auth/user`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + getCookie("token"),
-              },
-              method: "PATCH",
-              body: JSON.stringify(form),
-            }).then((res) => {
-              if (res.success) {
-                dispatch(setUser(res));
-              }
-            });
-          });
         }
       })
       .catch((err) => console.log(err));
