@@ -1,28 +1,29 @@
-import IDStyle from "./ingredient-details.module.css";
+import style from "./ingredient.module.css";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom"
 
-function IngredientDetails() {
+function IngredientPage() {
   const { id } = useParams()
   const data = useSelector(
     (state) => state.ingredients.ingredients
   ).find(i => i._id === id)
-  return data && (
-    <div className="mr-25 ml-25">
-      <figure className={IDStyle.figure}>
+  return (
+    <div className={style.wrapper + " mr-25 ml-25"}>
+      <h2 className="text text_type_main-large mt-30 mb-4">Детали ингредиента</h2>
+      <figure className={style.figure}>
         <img
-          className={IDStyle.img + " mb-4"}
+          className={style.img + " mb-4"}
           src={data.image_large}
           alt={data.name}
         />
         <figcaption
-          className={IDStyle.caption + " text text_type_main-medium mb-8"}
+          className={style.caption + " text text_type_main-medium mb-8"}
         >
           {data.name}
         </figcaption>
       </figure>
-      <ul className={IDStyle.grid}>
-        <li className={IDStyle.flex}>
+      <ul className={style.grid}>
+        <li className={style.flex}>
           <p className="text text_type_main-default text_color_inactive mb-2">
             Калории,ккал
           </p>
@@ -30,7 +31,7 @@ function IngredientDetails() {
             {data.calories}
           </p>
         </li>
-        <li className={IDStyle.flex}>
+        <li className={style.flex}>
           <p className="text text_type_main-default text_color_inactive mb-2">
             Белки, г
           </p>
@@ -38,7 +39,7 @@ function IngredientDetails() {
             {data.proteins}
           </p>
         </li>
-        <li className={IDStyle.flex}>
+        <li className={style.flex}>
           <p className="text text_type_main-default text_color_inactive mb-2">
             Жиры, г
           </p>
@@ -46,7 +47,7 @@ function IngredientDetails() {
             {data.fat}
           </p>
         </li>
-        <li className={IDStyle.flex}>
+        <li className={style.flex}>
           <p className="text text_type_main-default text_color_inactive mb-2">
             Углеводы, г
           </p>
@@ -59,4 +60,4 @@ function IngredientDetails() {
   );
 }
 
-export default IngredientDetails;
+export default IngredientPage;

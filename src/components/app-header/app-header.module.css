@@ -39,6 +39,10 @@
   align-items: center;
 }
 
+.active {
+  color: #F2F2F3;;
+}
+
 .none {
   text-decoration: none;
 }

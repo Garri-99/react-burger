@@ -4,6 +4,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import ConstructorList from "../constructor-list/constructor-list";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import currency from "../../images/icon.svg";
 import BCStyle from "./burger-constructor.module.css";
 import Modal from "../modal/modal";
@@ -15,21 +16,25 @@ import {
   addIngredient,
   deleteIngredient,
   setBun,
-  moveIngredient
+  moveIngredient,
+  resetConstuctor
 } from "../../services/slices/constructor-ingredients-slice";
 import {
   decreaseVolume,
   increaseVolume,
+  resetCount,
 } from "../../services/slices/ingredients-slice";
 import { v4 as uuidv4 } from "uuid";
 
 function BurgerConstructor() {
   const dispatch = useDispatch();
+  const history = useHistory()
   const [isOpen, setIsOpen] = useState(false);
   const { bun, constructorIngredients, cost } = useSelector(
     (state) => state.constructorIngredients
   );
   const { isLoading } = useSelector((state) => state.order);
+  const { isAuthCheck } = useSelector((state) => state.user)
 
   const [{ isHover }, dropTarget] = useDrop({
     accept: "ingredient",
@@ -48,11 +53,16 @@ function BurgerConstructor() {
   const border = isHover ? "1px solid #4C4CFF" : "1px solid transparent";
 
   const onButtonClick = () => {
+    if (!isAuthCheck) {
+      return history.push('/login')
+    }
     dispatch(getOrderNubmer({ bun, constructorIngredients }, setIsOpen));
   };
 
   const closeModal = () => {
     setIsOpen(false);
+    dispatch(resetCount())
+    dispatch(resetConstuctor())
   };
 
   const handleClose = (data) => {

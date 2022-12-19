@@ -35,9 +35,19 @@ const constructorIngredientsSlice = createSlice({
         action.payload.item
       );
     },
+    resetConstuctor(state) {
+      state.bun = null;
+      state.constructorIngredients = [];
+      state.cost = 0;
+    },
   },
 });
 
 export default constructorIngredientsSlice.reducer;
-export const { setBun, addIngredient, deleteIngredient, moveIngredient } =
-  constructorIngredientsSlice.actions;
+export const {
+  setBun,
+  addIngredient,
+  deleteIngredient,
+  moveIngredient,
+  resetConstuctor,
+} = constructorIngredientsSlice.actions;
