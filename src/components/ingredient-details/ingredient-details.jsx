@@ -8,7 +8,7 @@ function IngredientDetails() {
     (state) => state.ingredients.ingredients
   ).find(i => i._id === id)
   return data && (
-    <div className="mr-25 ml-25">
+    <div className={IDStyle.wrapper}>
       <figure className={IDStyle.figure}>
         <img
           className={IDStyle.img + " mb-4"}

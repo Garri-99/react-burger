@@ -2,14 +2,23 @@ import {
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, Route, Switch, useRouteMatch } from "react-router-dom";
+import { NavLink, Route, Switch, useRouteMatch, useHistory } from "react-router-dom";
+import OrderCardProfile from "../../components/order-card-profile/order-card-profile";
 import { changeData, logout } from "../../services/slices/user-slice";
+import { wsActions } from "../../services/slices/socket-slice";
+import { uniqIngredient } from "../../utils/uniq-ingredient";
 import styles from "./profile.module.css";
+import { wsUrl } from "../../utils/constants";
+import { getCookie } from "../../utils/cookie";
 
 function ProfilePage() {
   const { data, isAuthCheck } = useSelector((store) => store.user);
+  const history = useHistory()
+  const orders = useSelector((store) => store.socket.myOrders);
+  const { ingredients } = useSelector((store) => store.ingredients);
+  const { wsInit } = wsActions;
   const { path, url } = useRouteMatch();
   const dispatch = useDispatch();
   const password = useRef(null);
@@ -38,14 +47,27 @@ function ProfilePage() {
   const onClick = () => {
     dispatch(logout());
   };
+  const onOrderClick = (id, number) => {
+    history.push(`/profile/orders/${id}`, { backgroundProfile: history.location, number });
+  };
+
+  useEffect(() => {
+    dispatch({
+      type: wsInit,
+      payload: {
+        wsUrl: `${wsUrl}/orders?token=${getCookie("token")}`,
+        user: true
+      },
+    });
+  }, []);
 
   return (
     isAuthCheck && (
       <div className={styles.container}>
         <div>
           <nav>
-            <ul className={styles.ul}>
-              <li className={styles.list}>
+            <ul className={styles.list}>
+              <li className={styles.item}>
                 <NavLink
                   to={`${url}`}
                   exact
@@ -58,7 +80,7 @@ function ProfilePage() {
                   Профиль
                 </NavLink>
               </li>
-              <li className={styles.list}>
+              <li className={styles.item}>
                 <NavLink
                   to={`${url}/orders`}
                   exact
@@ -71,7 +93,7 @@ function ProfilePage() {
                   История заказов
                 </NavLink>
               </li>
-              <li className={styles.list}>
+              <li className={styles.item}>
                 <button
                   onClick={onClick}
                   className={`${styles.button} text text_type_main-medium text_color_inactive`}
@@ -134,6 +156,25 @@ function ProfilePage() {
                 <Button htmlType="submit">Cохранить</Button>
               </div>
             </form>
+          </Route>
+          <Route path={`${path}/orders`} exact>
+            <ul className={styles.orders}>
+              {orders.map((order) => (
+                <li key={order._id} onClick={() => onOrderClick(order._id, order.number)}>
+                  <OrderCardProfile
+                    orderId={order._id}
+                    ingredients={uniqIngredient(
+                      order.ingredients.map((id) => {
+                        const ingredient = ingredients.find(
+                          (i) => i._id === id
+                        );
+                        return { ...ingredient, __v: 1 };
+                      })
+                    )}
+                  />
+                </li>
+              ))}
+            </ul>
           </Route>
         </Switch>
       </div>
