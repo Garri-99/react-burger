@@ -20,11 +20,18 @@ function FeedPage() {
   useEffect(() => {
     dispatch({
       type: wsInit,
-      payload: { wsUrl: `${wsUrl}/orders/all`, user: false},
+      payload: { wsUrl: `${wsUrl}/orders/all`, user: false },
     });
+    return () => {
+      dispatch({
+        type: wsActions.onClose.type,
+      });
+    };
   }, []);
 
-  return !orders.length ? <Loader /> : (
+  return !orders.length ? (
+    <Loader />
+  ) : (
     <div className={styles.content}>
       <h2 className="text text_color_primary text_type_main-large mt-10 mb-5">
         Лента заказов

@@ -2,7 +2,7 @@ import {
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Route, Switch, useRouteMatch, useHistory } from "react-router-dom";
 import OrderCardProfile from "../../components/order-card-profile/order-card-profile";
@@ -12,6 +12,7 @@ import { uniqIngredient } from "../../utils/uniq-ingredient";
 import styles from "./profile.module.css";
 import { wsUrl } from "../../utils/constants";
 import { getCookie } from "../../utils/cookie";
+import { useForm } from "../../services/hooks";
 
 function ProfilePage() {
   const { data, isAuthCheck } = useSelector((store) => store.user);
@@ -24,21 +25,18 @@ function ProfilePage() {
   const password = useRef(null);
   const name = useRef(null);
   const login = useRef(null);
-  const [form, setForm] = useState({
+  const {values, handleChange, setValues} = useForm({
     name: data.name,
     password: "",
     email: data.email,
-  });
-  const onChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  })
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(changeData(form));
+    dispatch(changeData(values));
   };
   const onReset = (e) => {
     e.preventDefault();
-    setForm({
+    setValues({
       name: data.name,
       password: "",
       email: data.email,
@@ -59,6 +57,11 @@ function ProfilePage() {
         user: true
       },
     });
+    return () => {
+      dispatch({
+        type: wsActions.onClose.type,
+      });
+    };
   }, []);
 
   return (
@@ -120,8 +123,8 @@ function ProfilePage() {
           <Route path={`${path}`} exact>
             <form className={styles.form} onSubmit={onSubmit} onReset={onReset}>
               <Input
-                onChange={onChange}
-                value={form.name}
+                onChange={handleChange}
+                value={values.name}
                 name="name"
                 ref={name}
                 placeholder="Имя"
@@ -130,8 +133,8 @@ function ProfilePage() {
                 onIconClick={() => name.current.focus()}
               />
               <Input
-                onChange={onChange}
-                value={form.email}
+                onChange={handleChange}
+                value={values.email}
                 placeholder="Логин"
                 name="email"
                 ref={login}
@@ -140,8 +143,8 @@ function ProfilePage() {
                 onIconClick={() => login.current.focus()}
               />
               <Input
-                onChange={onChange}
-                value={form.password}
+                onChange={handleChange}
+                value={values.password}
                 name="password"
                 ref={password}
                 placeholder="Пароль"

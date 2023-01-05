@@ -4,7 +4,6 @@ import {
   LoginPage,
   RegisterPage,
   ResetPage,
-  IngredientPage,
   FeedPage,
   OrderPage,
 } from "../../pages";
@@ -45,7 +44,7 @@ function App() {
             <HomePage />
           </Route>
           <Route path="/ingredient/:id" exact>
-            <IngredientPage />
+            <IngredientDetails isPage/>
           </Route>
           <Route path="/feed" exact>
             <FeedPage />

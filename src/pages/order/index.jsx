@@ -28,6 +28,11 @@ function OrderPage({ isModal, isUser }) {
         payload: { wsUrl: `${wsUrl}/orders/all`, user: false},
       });
     }
+    return () => {
+      dispatch({
+        type: wsActions.onClose.type,
+      });
+    };
   }, []);
   const { ingredients } = useSelector((store) => store.ingredients);
   const order = useSelector((store) => store.socket[isUser ? 'myOrders' : 'orders']).find(

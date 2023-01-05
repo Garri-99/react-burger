@@ -9,28 +9,31 @@ export const socketMiddleware = (wsActions) => {
       if (type === wsInit) {
         socket = new WebSocket(payload.wsUrl);
       }
+      if (type === onClose.type) {
+        socket.close()
+      }
       if (socket) {
         socket.onopen = () => {
           dispatch(onOpen());
         };
 
         socket.onerror = (event) => {
-          dispatch(onError(event));
+          dispatch(onError(event.message));
         };
 
         socket.onmessage = (event) => {
           const { data } = event;
           const parsedData = JSON.parse(data);
           const { success, ...restParsedData } = parsedData;
-          if (payload.user) {
+          if (payload?.user) {
             dispatch(onUserMessage(restParsedData));
           } else {
             dispatch(onMessage(restParsedData))
           }
         };
 
-        socket.onclose = (event) => {
-          dispatch(onClose(event));
+        socket.onclose = () => {
+          dispatch(onClose());
         };
       }
 
