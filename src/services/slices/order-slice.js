@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { baseUrl } from "../../utils/constants";
+import { getCookie } from "../../utils/cookie";
 import { request } from "../../utils/request";
 
 const initialState = {
@@ -11,8 +12,8 @@ const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
-    setOrderNubmer(state, actions) {
-      state.number = actions.payload;
+    setOrderNubmer(state, action) {
+      state.number = action.payload;
     },
     setIsLoading(state, action) {
       state.isLoading = action.payload;
@@ -28,6 +29,7 @@ export const getOrderNubmer = ({ bun, constructorIngredients }, setIsOpen) => {
     request(`${baseUrl}/api/orders`, {
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + getCookie("token"),
       },
       method: "POST",
       body: JSON.stringify({

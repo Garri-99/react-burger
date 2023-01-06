@@ -3,26 +3,24 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "./login.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect, useLocation } from "react-router-dom";
 import { getUser, login } from "../../services/slices/user-slice";
+import { useForm } from "../../services/hooks";
 
 function LoginPage() {
   const dispatch = useDispatch();
   const { state } = useLocation()
   const { isAuthCheck } = useSelector((state) => state.user);
-  const [form, setForm] = useState({
+  const {values, handleChange} = useForm({
     password: "",
     email: "",
-  });
-  const onChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  })
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(login(form));
+    dispatch(login(values));
   };
   useEffect(() => {
     dispatch(getUser())
@@ -33,14 +31,14 @@ function LoginPage() {
       <form className={styles.form} onSubmit={onSubmit}>
         <h2 className="text text_type_main-medium mb-6">Вход</h2>
         <EmailInput
-          onChange={onChange}
-          value={form.email}
+          onChange={handleChange}
+          value={values.email}
           name={"email"}
           extraClass="mb-6"
         />
         <PasswordInput
-          onChange={onChange}
-          value={form.password}
+          onChange={handleChange}
+          value={values.password}
           name={"password"}
           extraClass="mb-6"
         />

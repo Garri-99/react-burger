@@ -2,34 +2,41 @@ import {
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, Route, Switch, useRouteMatch } from "react-router-dom";
+import { NavLink, Route, Switch, useRouteMatch, useHistory } from "react-router-dom";
+import OrderCardProfile from "../../components/order-card-profile/order-card-profile";
 import { changeData, logout } from "../../services/slices/user-slice";
+import { wsActions } from "../../services/slices/socket-slice";
+import { uniqIngredient } from "../../utils/uniq-ingredient";
 import styles from "./profile.module.css";
+import { wsUrl } from "../../utils/constants";
+import { getCookie } from "../../utils/cookie";
+import { useForm } from "../../services/hooks";
 
 function ProfilePage() {
   const { data, isAuthCheck } = useSelector((store) => store.user);
+  const history = useHistory()
+  const orders = useSelector((store) => store.socket.myOrders);
+  const { ingredients } = useSelector((store) => store.ingredients);
+  const { wsInit, wsClose } = wsActions;
   const { path, url } = useRouteMatch();
   const dispatch = useDispatch();
   const password = useRef(null);
   const name = useRef(null);
   const login = useRef(null);
-  const [form, setForm] = useState({
+  const {values, handleChange, setValues} = useForm({
     name: data.name,
     password: "",
     email: data.email,
-  });
-  const onChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  })
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(changeData(form));
+    dispatch(changeData(values));
   };
   const onReset = (e) => {
     e.preventDefault();
-    setForm({
+    setValues({
       name: data.name,
       password: "",
       email: data.email,
@@ -38,14 +45,28 @@ function ProfilePage() {
   const onClick = () => {
     dispatch(logout());
   };
+  const onOrderClick = (id, number) => {
+    history.push(`/profile/orders/${id}`, { backgroundProfile: history.location, number });
+  };
+
+  useEffect(() => {
+    dispatch({
+      type: wsInit,
+      payload: {
+        wsUrl: `${wsUrl}/orders?token=${getCookie("token")}`,
+        user: true
+      },
+    });
+    return () => dispatch({type: wsClose})
+  }, [dispatch]);
 
   return (
     isAuthCheck && (
       <div className={styles.container}>
         <div>
           <nav>
-            <ul className={styles.ul}>
-              <li className={styles.list}>
+            <ul className={styles.list}>
+              <li className={styles.item}>
                 <NavLink
                   to={`${url}`}
                   exact
@@ -58,7 +79,7 @@ function ProfilePage() {
                   Профиль
                 </NavLink>
               </li>
-              <li className={styles.list}>
+              <li className={styles.item}>
                 <NavLink
                   to={`${url}/orders`}
                   exact
@@ -71,7 +92,7 @@ function ProfilePage() {
                   История заказов
                 </NavLink>
               </li>
-              <li className={styles.list}>
+              <li className={styles.item}>
                 <button
                   onClick={onClick}
                   className={`${styles.button} text text_type_main-medium text_color_inactive`}
@@ -98,8 +119,8 @@ function ProfilePage() {
           <Route path={`${path}`} exact>
             <form className={styles.form} onSubmit={onSubmit} onReset={onReset}>
               <Input
-                onChange={onChange}
-                value={form.name}
+                onChange={handleChange}
+                value={values.name}
                 name="name"
                 ref={name}
                 placeholder="Имя"
@@ -108,8 +129,8 @@ function ProfilePage() {
                 onIconClick={() => name.current.focus()}
               />
               <Input
-                onChange={onChange}
-                value={form.email}
+                onChange={handleChange}
+                value={values.email}
                 placeholder="Логин"
                 name="email"
                 ref={login}
@@ -118,8 +139,8 @@ function ProfilePage() {
                 onIconClick={() => login.current.focus()}
               />
               <Input
-                onChange={onChange}
-                value={form.password}
+                onChange={handleChange}
+                value={values.password}
                 name="password"
                 ref={password}
                 placeholder="Пароль"
@@ -134,6 +155,25 @@ function ProfilePage() {
                 <Button htmlType="submit">Cохранить</Button>
               </div>
             </form>
+          </Route>
+          <Route path={`${path}/orders`} exact>
+            <ul className={styles.orders}>
+              {orders.map((order) => (
+                <li key={order._id} onClick={() => onOrderClick(order._id, order.number)}>
+                  <OrderCardProfile
+                    orderId={order._id}
+                    ingredients={uniqIngredient(
+                      order.ingredients.map((id) => {
+                        const ingredient = ingredients.find(
+                          (i) => i._id === id
+                        );
+                        return { ...ingredient, __v: 1 };
+                      })
+                    )}
+                  />
+                </li>
+              ))}
+            </ul>
           </Route>
         </Switch>
       </div>

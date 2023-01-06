@@ -4,27 +4,25 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect, useLocation } from 'react-router-dom'
+import { useForm } from "../../services/hooks";
 import { getUser, register } from "../../services/slices/user-slice";
 import styles from "./register.module.css";
 
 function RegisterPage() {
   const dispatch = useDispatch()
-  const { state } = useLocation()
-  const { isAuthCheck } = useSelector(state => state.user)
-  const [form, setForm] = useState({
+  const { values, handleChange } = useForm({
     name: '',
     password: '',
     email: ''
   })
-  const onChange = (e) => {
-    setForm({...form, [e.target.name]: e.target.value});
-  };
+  const { state } = useLocation()
+  const { isAuthCheck } = useSelector(state => state.user)
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(register(form))
+    dispatch(register(values))
   }
   useEffect(() => {
     dispatch(getUser())
@@ -35,21 +33,21 @@ function RegisterPage() {
       <form className={styles.form} onSubmit={onSubmit}>
         <h2 className="text text_type_main-medium mb-6">Регистрация</h2>
         <Input
-          onChange={onChange}
-          value={form.name}
+          onChange={handleChange}
+          value={values.name}
           name={"name"}
           placeholder={"Имя"}
           extraClass="mb-6"
         />
         <EmailInput
-          onChange={onChange}
-          value={form.email}
+          onChange={handleChange}
+          value={values.email}
           name={"email"}
           extraClass="mb-6"
         />
         <PasswordInput
-          onChange={onChange}
-          value={form.password}
+          onChange={handleChange}
+          value={values.password}
           name={"password"}
           extraClass="mb-6"
         />

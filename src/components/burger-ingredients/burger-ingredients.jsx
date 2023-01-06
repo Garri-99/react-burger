@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
+import { Tab} from "@ya.praktikum/react-developer-burger-ui-components";
 import BIStyle from "./burger-ingredients.module.css";
 import Cart from "../cart/cart";
 import { useSelector } from "react-redux";

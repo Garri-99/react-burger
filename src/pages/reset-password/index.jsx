@@ -3,21 +3,18 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useState } from "react";
 import { baseUrl } from "../../utils/constants";
 import { request } from "../../utils/request";
 import { Redirect, Link, useLocation } from "react-router-dom";
 import styles from "./reset.module.css";
+import { useForm } from "../../services/hooks";
 
 function ResetPage() {
   const { state } = useLocation()
-  const [form, setForm] = useState({
+  const {values, handleChange} = useForm({
     token: "",
     password: "",
-  });
-  const onChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  })
   const onSubmit = (e) => {
     e.preventDefault();
     request(`${baseUrl}/api/password-reset/reset`, {
@@ -26,8 +23,8 @@ function ResetPage() {
       },
       method: "POST",
       body: JSON.stringify({
-        password: form.password,
-        token: form.token,
+        password: values.password,
+        token: values.token,
       }),
     })
       .then((res) => {
@@ -48,15 +45,15 @@ function ResetPage() {
           Восстановление пароля
         </h2>
         <PasswordInput
-          onChange={onChange}
-          value={form.password}
+          onChange={handleChange}
+          value={values.password}
           name={"password"}
           extraClass="mb-6"
           placeholder={"Введите новый пароль"}
         />
         <Input
-          onChange={onChange}
-          value={form.token}
+          onChange={handleChange}
+          value={values.token}
           name={"token"}
           placeholder={"Введите код из письма"}
           extraClass="mb-6"

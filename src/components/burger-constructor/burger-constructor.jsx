@@ -132,6 +132,7 @@ function BurgerConstructor() {
               <p className="text text_type_digits-medium mr-2">{cost}</p>
               <img alt="валюта" src={currency} className="mr-10" />
               <Button
+                disabled={isLoading? true : false}
                 type="primary"
                 size="large"
                 htmlType="button"
