@@ -5,14 +5,14 @@ export const socketMiddleware = (wsActions) => {
     return (next) => (action) => {
       const { dispatch } = store;
       const { type, payload } = action;
-      const { wsInit, onOpen, onClose, onError, onMessage, onUserMessage } = wsActions;
+      const { wsInit, onOpen, onClose, onError, onMessage, onUserMessage, wsClose } = wsActions;
       if (type === wsInit) {
         socket = new WebSocket(payload.wsUrl);
       }
-      if (type === onClose.type) {
+      if (type === wsClose) {
         socket.close()
       }
-      if (socket) {
+      if (socket && payload) {
         socket.onopen = () => {
           dispatch(onOpen());
         };
@@ -25,7 +25,7 @@ export const socketMiddleware = (wsActions) => {
           const { data } = event;
           const parsedData = JSON.parse(data);
           const { success, ...restParsedData } = parsedData;
-          if (payload?.user) {
+          if (payload.user) {
             dispatch(onUserMessage(restParsedData));
           } else {
             dispatch(onMessage(restParsedData))

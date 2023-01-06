@@ -19,7 +19,7 @@ function ProfilePage() {
   const history = useHistory()
   const orders = useSelector((store) => store.socket.myOrders);
   const { ingredients } = useSelector((store) => store.ingredients);
-  const { wsInit } = wsActions;
+  const { wsInit, wsClose } = wsActions;
   const { path, url } = useRouteMatch();
   const dispatch = useDispatch();
   const password = useRef(null);
@@ -57,12 +57,8 @@ function ProfilePage() {
         user: true
       },
     });
-    return () => {
-      dispatch({
-        type: wsActions.onClose.type,
-      });
-    };
-  }, []);
+    return () => dispatch({type: wsClose})
+  }, [dispatch]);
 
   return (
     isAuthCheck && (

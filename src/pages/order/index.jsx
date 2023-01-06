@@ -15,7 +15,7 @@ import { getCookie } from "../../utils/cookie";
 function OrderPage({ isModal, isUser }) {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { wsInit } = wsActions;
+  const { wsInit, wsClose } = wsActions;
   useEffect(() => {
     if (isUser) {
       dispatch({
@@ -28,12 +28,7 @@ function OrderPage({ isModal, isUser }) {
         payload: { wsUrl: `${wsUrl}/orders/all`, user: false},
       });
     }
-    return () => {
-      dispatch({
-        type: wsActions.onClose.type,
-      });
-    };
-  }, []);
+  }, [dispatch]);
   const { ingredients } = useSelector((store) => store.ingredients);
   const order = useSelector((store) => store.socket[isUser ? 'myOrders' : 'orders']).find(
     (i) => i._id === id

@@ -12,7 +12,7 @@ function FeedPage() {
   const dispatch = useDispatch();
   const { orders, total, totalToday } = useSelector((store) => store.socket);
   const { ingredients } = useSelector((store) => store.ingredients);
-  const { wsInit } = wsActions;
+  const { wsInit, wsClose } = wsActions;
   const history = useHistory();
   const onOrderClick = (id, number) => {
     history.push(`/feed/${id}`, { backgroundFeed: history.location, number });
@@ -22,12 +22,8 @@ function FeedPage() {
       type: wsInit,
       payload: { wsUrl: `${wsUrl}/orders/all`, user: false },
     });
-    return () => {
-      dispatch({
-        type: wsActions.onClose.type,
-      });
-    };
-  }, []);
+    return () => dispatch({type: wsClose})
+  }, [dispatch]);
 
   return !orders.length ? (
     <Loader />

@@ -24,6 +24,8 @@ const socketSlice = createSlice({
     connectionClosed(state) {
       state.error = undefined;
       state.connected = false;
+      state.orders = [];
+      state.myOrders = []
     },
     getOrders(state, action) {
       state.error = undefined;
@@ -46,10 +48,12 @@ export const {
   getMyOrders
 } = socketSlice.actions;
 
-const WS_CONNECTION_START = 'WS_CONNECTION_START'
+const WS_CONNECTION_START = 'WS_CONNECTION_START';
+const WS_CONNECTION_ClOSE = 'WS_CONNECTION_ClOSE'
 
 export const wsActions = {
   wsInit: WS_CONNECTION_START,
+  wsClose: WS_CONNECTION_ClOSE,
   onOpen: connectionSucces,
   onClose: connectionClosed,
   onError: connectionError,
