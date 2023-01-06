@@ -4,7 +4,7 @@ import {
   ListIcon,
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { NavLink, useRouteMatch } from "react-router-dom";
+import { NavLink, useRouteMatch, Link } from "react-router-dom";
 import AHStyle from "./app-header.module.css";
 export default function AppHeader() {
   const matchHome = useRouteMatch("/");
@@ -43,9 +43,9 @@ export default function AppHeader() {
             </NavLink>
           </li>
         </ul>
-        <div className={AHStyle.logo}>
+        <Link to="/" className={AHStyle.logo}>
           <Logo />
-        </div>
+        </Link>
         <ul className={AHStyle.list_r}>
           <li className={AHStyle.item + " pt-4 pb-4 pr-5 pl-5"}>
             <ProfileIcon type={matchProfile ? "primary" : "secondary"} />
