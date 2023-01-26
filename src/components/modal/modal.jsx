@@ -7,7 +7,7 @@ import MStyle from "./modal.module.css";
 
 const modalsContainer = document.querySelector("#modals");
 
-function Modal({ title, onClose, children }) {
+function Modal({ title, onClose, children, number }) {
   useEffect(() => {
     const onEscKeydown=(e) => {
       e.preventDefault();
@@ -23,8 +23,9 @@ function Modal({ title, onClose, children }) {
   return ReactDOM.createPortal(
     <>
       <div className={MStyle.modal}>
-        <div className={MStyle.container + " mt-10 ml-10"}>
+        <div className={MStyle.container}>
           {title && <h3 className="text text_type_main-large">{title}</h3>}
+          {number && <h3 className="text text_type_digits-default">#{number}</h3>}
         </div>
         {children}
         <button className={MStyle.close} onClick={onClose}>
@@ -39,6 +40,7 @@ function Modal({ title, onClose, children }) {
 
 Modal.propTypes = {
   title: PropTypes.string,
+  number: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   children: PropTypes.element.isRequired
 };

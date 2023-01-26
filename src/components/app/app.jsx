@@ -4,7 +4,8 @@ import {
   LoginPage,
   RegisterPage,
   ResetPage,
-  IngredientPage,
+  FeedPage,
+  OrderPage,
 } from "../../pages";
 import AppHeader from "../app-header/app-header";
 import { Switch, Route, useHistory, useLocation } from "react-router-dom";
@@ -16,31 +17,46 @@ import { ProtectedRoute } from "../protected-route/protected-route";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import { getUser } from "../../services/slices/user-slice";
+import OrderCard from "../order-card/order-card";
 
 function App() {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
   const background = location.state?.background;
+  const backgroundFeed = location.state?.backgroundFeed;
+  const backgroundProfile = location.state?.backgroundProfile;
   const { ingredients } = useSelector((store) => store.ingredients);
   const closeModal = () => {
     history.goBack();
   };
   useEffect(() => {
     dispatch(getIngredients());
-    dispatch(getUser())
+    dispatch(getUser());
   }, []);
 
   return (
     ingredients && (
       <>
         <AppHeader />
-        <Switch location={background || location}>
+        <Switch location={background || backgroundFeed || backgroundProfile || location}>
           <Route path="/" exact>
             <HomePage />
           </Route>
           <Route path="/ingredient/:id" exact>
-            <IngredientPage />
+            <IngredientDetails isPage/>
+          </Route>
+          <Route path="/feed" exact>
+            <FeedPage />
+          </Route>
+          <Route path="/feed/:id" exact>
+            <OrderPage />
+          </Route>
+          <Route path="/profile/orders/:id" exact>
+            <OrderPage isUser />
+          </Route>
+          <Route path="/order" exact>
+            <OrderCard />
           </Route>
           <ProtectedRoute path="/profile">
             <ProfilePage />
@@ -58,10 +74,24 @@ function App() {
             <ResetPage />
           </Route>
         </Switch>
-        { background && (
+        {background && (
           <Route path="/ingredient/:id" exact>
             <Modal onClose={closeModal} title={"Детали ингредиента"}>
               <IngredientDetails />
+            </Modal>
+          </Route>
+        )}
+        {backgroundFeed && (
+          <Route path="/feed/:id" exact>
+            <Modal onClose={closeModal} number={location.state.number}>
+              <OrderPage isModal />
+            </Modal>
+          </Route>
+        )}
+        {backgroundProfile && (
+          <Route path="/profile/orders/:id" exact>
+            <Modal onClose={closeModal} number={location.state.number}>
+              <OrderPage isModal isUser />
             </Modal>
           </Route>
         )}

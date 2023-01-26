@@ -2,22 +2,22 @@ import {
   EmailInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { baseUrl } from "../../utils/constants";
 import { request } from "../../utils/request";
 import { Redirect, useHistory, Link } from "react-router-dom";
 import styles from "./forgot.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../../services/slices/user-slice";
+import { useForm } from "../../services/hooks";
 
 function ForgotPage() {
   const { isAuthCheck } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const history = useHistory();
-  const [email, setEmail] = useState("");
-  const onChange = (e) => {
-    setEmail(e.target.value);
-  };
+  const { values, handleChange } = useForm({
+    email: "",
+  });
   const onSubmit = (e) => {
     e.preventDefault();
     request(`${baseUrl}/api/password-reset`, {
@@ -26,7 +26,7 @@ function ForgotPage() {
       },
       method: "POST",
       body: JSON.stringify({
-        email,
+        email: values.email,
       }),
     })
       .then((res) => {
@@ -49,8 +49,8 @@ function ForgotPage() {
           Восстановление пароля
         </h2>
         <EmailInput
-          onChange={onChange}
-          value={email}
+          onChange={handleChange}
+          value={values.email}
           name={"email"}
           extraClass="mb-6"
           placeholder={"Укажите e-mail"}
