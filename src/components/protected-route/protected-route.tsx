@@ -1,16 +1,10 @@
-import { FC, ReactElement, useEffect, useState } from "react";
-import { Route, Redirect } from "react-router-dom";
+import { FC, ReactNode, useEffect, useState } from "react";
+import { Route, Redirect, RouteProps } from "react-router-dom";
 import { useDispatch, useSelector } from "../../services/hooks";
 import { getUser } from "../../services/slices/user-slice";
 import { Loader } from "../loader/loader";
 
-type TProtectedProp = {
-  children: ReactElement;
-} & {
-  [name: string]: any;
-};
-
-export const ProtectedRoute: FC<TProtectedProp> = ({ children, ...rest }) => {
+export const ProtectedRoute: FC<RouteProps & { children: ReactNode }> = ({ children, ...rest }) => {
   const { isAuthCheck, isLoading } = useSelector((store) => store.user);
   const [isUserLoaded, setUserLoaded] = useState(false);
   const dispatch = useDispatch();

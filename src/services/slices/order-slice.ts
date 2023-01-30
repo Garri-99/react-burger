@@ -26,6 +26,11 @@ const orderSlice = createSlice({
       state.isLoading = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(getOrderNubmer.rejected, (state, action) => {
+      console.log(action.error)
+    })
+  }
 });
 
 const { setOrderNubmer, setIsLoading } = orderSlice.actions;
@@ -57,7 +62,6 @@ export const getOrderNubmer = createAsyncThunk<void, TGetOrderArgs>(
         dispatch(setOrderNubmer(res.order.number));
         setIsOpen(true);
       })
-      .catch((err) => console.log(err))
       .finally(() => dispatch(setIsLoading(false)));
   }
 );

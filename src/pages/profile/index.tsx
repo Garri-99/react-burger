@@ -2,7 +2,7 @@ import {
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FC, useEffect, useRef } from "react";
+import { FC, FormEvent, useEffect, useRef } from "react";
 import {
   NavLink,
   Route,
@@ -35,11 +35,11 @@ const ProfilePage: FC = () => {
     password: "",
     email: data.email,
   });
-  const onSubmit = (e: any) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(changeData(values));
   };
-  const onReset = (e: any) => {
+  const onReset = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setValues({
       name: data.name,

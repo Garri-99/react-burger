@@ -15,7 +15,7 @@ interface IModalProp {
 
 const Modal: FC<IModalProp> = ({ title, onClose, children, number }) => {
   useEffect(() => {
-    const onEscKeydown = (e: any) => {
+    const onEscKeydown = (e: KeyboardEvent) => {
       e.preventDefault();
       e.key === "Escape" && onClose();
     };

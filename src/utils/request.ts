@@ -1,6 +1,6 @@
 import { refreshToken } from "./cookie";
 
-export function request(url: string, options?: any) {
+export function request(url: string, options?: RequestInit) {
   return fetch(url, options).then((res) => {
     if (res.ok) {
       return res.json();

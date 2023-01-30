@@ -4,7 +4,7 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FC, useEffect } from "react";
+import { FC, FormEvent, useEffect } from "react";
 import { Link, Redirect, useLocation } from "react-router-dom";
 import { useDispatch, useForm, useSelector } from "../../services/hooks";
 import { getUser, register } from "../../services/slices/user-slice";
@@ -19,7 +19,7 @@ const RegisterPage: FC = () => {
   });
   const { state } = useLocation<{ from: Location }>();
   const { isAuthCheck } = useSelector((state) => state.user);
-  const onSubmit = (e: any) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(register(values));
   };

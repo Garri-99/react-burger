@@ -38,6 +38,23 @@ const userSlice = createSlice({
       state.data.name = null;
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(register.rejected, (state, action) => {
+      console.log(action.error);
+    });
+    builder.addCase(login.rejected, (state, action) => {
+      console.log(action.error);
+    });
+    builder.addCase(logout.rejected, (state, action) => {
+      console.log(action.error);
+    });
+    builder.addCase(getUser.rejected, (state, action) => {
+      console.log(action.error);
+    });
+    builder.addCase(changeData.rejected, (state, action) => {
+      console.log(action.error);
+    });
+  },
 });
 
 export const { setUser, setLoading, resetUser } = userSlice.actions;
@@ -60,11 +77,9 @@ export const register = createAsyncThunk<void, TRegisterArgs>(
         password,
         name,
       }),
-    })
-      .then((res) => {
-        dispatch(setUser(res));
-      })
-      .catch((err) => console.log(err));
+    }).then((res) => {
+      dispatch(setUser(res));
+    });
   }
 );
 
@@ -81,15 +96,13 @@ export const login = createAsyncThunk<void, TLoginArgs>(
         email,
         password,
       }),
-    })
-      .then((res) => {
-        if (res.success) {
-          setCookie("token", res.accessToken.split("Bearer ")[1]);
-          setCookie("refresh", res.refreshToken);
-          dispatch(setUser(res));
-        }
-      })
-      .catch((err) => console.log(err));
+    }).then((res) => {
+      if (res.success) {
+        setCookie("token", res.accessToken.split("Bearer ")[1]);
+        setCookie("refresh", res.refreshToken);
+        dispatch(setUser(res));
+      }
+    });
   }
 );
 
@@ -102,15 +115,13 @@ export const logout = createAsyncThunk("user/logout", (_, { dispatch }) => {
     body: JSON.stringify({
       token: getCookie("refresh"),
     }),
-  })
-    .then((res) => {
-      if (res.success) {
-        deleteCookie("token");
-        deleteCookie("refresh");
-        dispatch(resetUser());
-      }
-    })
-    .catch((err) => console.log(err));
+  }).then((res) => {
+    if (res.success) {
+      deleteCookie("token");
+      deleteCookie("refresh");
+      dispatch(resetUser());
+    }
+  });
 });
 
 export const getUser = createAsyncThunk("user/getUser", (_, { dispatch }) => {
@@ -126,7 +137,6 @@ export const getUser = createAsyncThunk("user/getUser", (_, { dispatch }) => {
         dispatch(setUser(res));
       }
     })
-    .catch((err) => console.log(err))
     .finally(() => dispatch(setLoading(false)));
 });
 
@@ -145,13 +155,11 @@ export const changeData = createAsyncThunk<void, TForm>(
       },
       method: "PATCH",
       body: JSON.stringify(form),
-    })
-      .then((res) => {
-        if (res.success) {
-          dispatch(setUser(res));
-        }
-      })
-      .catch((err) => console.log(err));
+    }).then((res) => {
+      if (res.success) {
+        dispatch(setUser(res));
+      }
+    });
   }
 );
 

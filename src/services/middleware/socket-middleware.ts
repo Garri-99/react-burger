@@ -1,8 +1,9 @@
-import { Middleware } from "redux";
+import { Middleware, MiddlewareAPI } from "redux";
 import { TwsActions } from "../slices/socket-slice";
+import { TAppDispatch, TRootState } from "../store";
 
 export const socketMiddleware = (wsActions: TwsActions): Middleware => {
-  return (store) => {
+  return (store: MiddlewareAPI<TAppDispatch, TRootState>) => {
     let socket: WebSocket | null = null;
 
     return (next) => (action) => {

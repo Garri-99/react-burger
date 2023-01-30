@@ -48,6 +48,11 @@ const ingredientsSlice = createSlice({
       state.ingredients.map((i) => (i.__v = 0));
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(getIngredients.rejected, (state, action) => {
+      console.log(action.error);
+    });
+  },
 });
 
 export const { setIngredients, increaseVolume, decreaseVolume, resetCount } =
@@ -56,11 +61,9 @@ export const { setIngredients, increaseVolume, decreaseVolume, resetCount } =
 export const getIngredients = createAsyncThunk(
   "ingredients/getIngredients",
   (_, { dispatch }) => {
-    request(`${baseUrl}/api/ingredients`)
-      .then((res) => {
-        dispatch(setIngredients(res.data));
-      })
-      .catch((err) => console.log(err));
+    request(`${baseUrl}/api/ingredients`).then((res) => {
+      dispatch(setIngredients(res.data));
+    });
   }
 );
 

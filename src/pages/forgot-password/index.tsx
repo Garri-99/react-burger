@@ -2,7 +2,7 @@ import {
   EmailInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FC, useEffect } from "react";
+import { FC, FormEvent, useEffect } from "react";
 import { baseUrl } from "../../utils/constants";
 import { request } from "../../utils/request";
 import { Redirect, useHistory, Link } from "react-router-dom";
@@ -17,7 +17,7 @@ const ForgotPage: FC = () => {
   const { values, handleChange } = useForm({
     email: "",
   });
-  const onSubmit = (e: any) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     request(`${baseUrl}/api/password-reset`, {
       headers: {

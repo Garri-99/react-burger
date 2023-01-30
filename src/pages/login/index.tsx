@@ -3,7 +3,7 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FC, useEffect } from "react";
+import { FC, FormEvent, useEffect } from "react";
 import styles from "./login.module.css";
 import { Link, Redirect, useLocation } from "react-router-dom";
 import { getUser, login } from "../../services/slices/user-slice";
@@ -17,7 +17,7 @@ const LoginPage: FC = () => {
     password: "",
     email: "",
   });
-  const onSubmit = (e: any) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(login(values));
   };

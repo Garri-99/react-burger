@@ -8,7 +8,7 @@ import { request } from "../../utils/request";
 import { Redirect, Link, useLocation } from "react-router-dom";
 import styles from "./reset.module.css";
 import { useForm } from "../../services/hooks";
-import { FC } from "react";
+import { FC, FormEvent } from "react";
 
 const ResetPage: FC = () => {
   const { state } = useLocation<{ ok: Location }>();
@@ -16,7 +16,7 @@ const ResetPage: FC = () => {
     token: "",
     password: "",
   });
-  const onSubmit = (e: any) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     request(`${baseUrl}/api/password-reset/reset`, {
       headers: {
