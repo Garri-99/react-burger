@@ -2,7 +2,7 @@
   "name": "react-burger",
   "version": "0.1.0",
   "private": true,
-  "homepage": "./",
+  "homepage": "https://garri-99.github.io/react-burger/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.6",
     "@testing-library/jest-dom": "^5.16.5",
@@ -57,6 +57,6 @@
   "devDependencies": {
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^9.0.0",
-    "gh-pages": "^4.0.0"
+    "gh-pages": "^5.0.0"
   }
 }
